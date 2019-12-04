@@ -1,25 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import firebase from './firebase'
+import { EntryForm } from './EntryForm/EntryForm'
+import { NewEntryForm } from './NewEntryForm/NewEntryForm'
+import Header from './Header/Header'
 
 function App() {
+
+  const [entries, setEntries] = React.useState([])
+
+  React.useEffect(() => {
+
+    const db = firebase.firestore().collection('entries')
+
+    db.onSnapshot(snapshot => {
+      const fetchedEntries = []
+
+      snapshot.forEach(doc => {
+        fetchedEntries.push({ ...doc.data(), id: doc.id })
+      })
+      setEntries(fetchedEntries)
+    })
+
+  }, [])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+    <div>
+      <Header />
+      {entries.map(entry => (
+        <EntryForm entry={entry} key={entry.id} />
+      ))}
+      <NewEntryForm />
     </div>
+
   );
 }
 
