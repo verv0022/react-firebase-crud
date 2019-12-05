@@ -24,9 +24,7 @@ function App() {
 
   }, [])
 
-
   return (
-
     <div>
       <Header />
       {entries.map(entry => (
@@ -34,7 +32,6 @@ function App() {
       ))}
       <NewEntryForm />
     </div>
-
   );
 }
 
